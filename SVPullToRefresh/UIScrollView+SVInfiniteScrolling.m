@@ -194,7 +194,9 @@ UIEdgeInsets scrollViewOriginalContentInsets;
 - (void)scrollViewDidScroll:(CGPoint)contentOffset {
     if(self.state != SVInfiniteScrollingStateLoading && self.enabled) {
         CGFloat scrollViewContentHeight = self.scrollView.contentSize.height;
-        CGFloat scrollOffsetThreshold = scrollViewContentHeight-self.scrollView.bounds.size.height;
+        // When contentsize < scrollview size infinite scroll gets triggered when doing pull to refresh
+        // issue 191 225
+        CGFloat scrollOffsetThreshold = MAX(scrollViewContentHeight-self.scrollView.bounds.size.height,0);
         
         if(!self.scrollView.isDragging && self.state == SVInfiniteScrollingStateTriggered)
             self.state = SVInfiniteScrollingStateLoading;
